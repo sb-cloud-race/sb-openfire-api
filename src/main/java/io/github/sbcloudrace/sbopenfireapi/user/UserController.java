@@ -3,6 +3,7 @@ package io.github.sbcloudrace.sbopenfireapi.user;
 import io.github.sbcloudrace.sbopenfireapi.config.SbOpenfireApiProperties;
 import lombok.AllArgsConstructor;
 import org.igniterealtime.restclient.entity.UserEntity;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,7 +19,6 @@ import java.util.List;
 public class UserController {
 
     private final UserServiceProxy userServiceProxy;
-    private final SbOpenfireApiProperties sbOpenfireApiProperties;
 
     @RequestMapping(value = "/{userId}/{securityToken}", method = RequestMethod.PUT)
     @ResponseBody
@@ -26,16 +26,20 @@ public class UserController {
         List<Long> personaIds = new ArrayList<>();
         personaIds.add(100L);
         personaIds.stream().forEach(aLong -> {
-            UserEntity userEntity = new UserEntity(
-                    "sbrw.".concat(aLong.toString()),
-                    null,
-                    null,
-                    securityToken.substring(0, 16));
-            try {
-                userServiceProxy.create(userEntity, sbOpenfireApiProperties.getToken());
-            } catch (RuntimeException e) {
-                System.out.println(e.getMessage());
+            String xmppUserName = "sbrw.".concat(aLong.toString());
+            UserEntity userEntityTmp = userServiceProxy.get(xmppUserName);
+            if (userEntityTmp != null) {
+                System.out.println("atualizaaaa");
+                //userEntityTmp
+            } else {
+                UserEntity userEntity = new UserEntity(
+                        xmppUserName,
+                        null,
+                        null,
+                        securityToken.substring(0, 16));
+                userServiceProxy.create(userEntity);
             }
+
         });
     }
 }
