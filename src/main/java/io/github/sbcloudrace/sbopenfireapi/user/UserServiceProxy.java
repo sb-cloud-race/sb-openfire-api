@@ -12,10 +12,13 @@ import org.springframework.web.bind.annotation.*;
         configuration = OpenfireFeignConfig.class)
 public interface UserServiceProxy {
 
-    @RequestMapping(value = "/users", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/users", method = RequestMethod.POST)
     void create(@RequestBody UserEntity userEntity);
 
-    @RequestMapping(value = "/users/{username}", method = RequestMethod.GET, consumes = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/users/{username}", method = RequestMethod.GET)
     UserEntity get(@PathVariable("username") String username);
+
+    @RequestMapping(value = "/users/{username}", method = RequestMethod.PUT)
+    void update(@RequestBody UserEntity userEntity, @PathVariable("username") String username);
 
 }
