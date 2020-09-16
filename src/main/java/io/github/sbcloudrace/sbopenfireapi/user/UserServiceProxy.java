@@ -3,8 +3,10 @@ package io.github.sbcloudrace.sbopenfireapi.user;
 import io.github.sbcloudrace.sbopenfireapi.config.OpenfireFeignConfig;
 import org.igniterealtime.restclient.entity.UserEntity;
 import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 @FeignClient(name = "sb-openfire-cli",
         url = "localhost:9090",

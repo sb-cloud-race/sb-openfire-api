@@ -1,8 +1,7 @@
 package io.github.sbcloudrace.sbopenfireapi;
 
+import io.github.sbcloudrace.sbopenfireapi.config.SbOpenfireApiProperties;
 import io.github.sbcloudrace.sbopenfireapi.user.UserServiceProxy;
-import org.igniterealtime.restclient.RestApiClient;
-import org.igniterealtime.restclient.entity.AuthenticationToken;
 import org.igniterealtime.restclient.entity.UserEntity;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -18,4 +17,22 @@ public class SbOpenfireApiApplication {
         SpringApplication.run(SbOpenfireApiApplication.class, args);
     }
 
+    @Bean
+    public CommandLineRunner run(UserServiceProxy userServiceProxy, SbOpenfireApiProperties sbOpenfireApiProperties) {
+        return args -> {
+            String xmppUserName = "sbrw.engine.engine";
+            try {
+                UserEntity userEntity = userServiceProxy.get(xmppUserName);
+                userEntity.setPassword(sbOpenfireApiProperties.getToken());
+                userServiceProxy.update(userEntity, xmppUserName);
+            } catch (Exception e) {
+                UserEntity userEntity = new UserEntity(
+                        xmppUserName,
+                        null,
+                        null,
+                        sbOpenfireApiProperties.getToken());
+                userServiceProxy.create(userEntity);
+            }
+        };
+    }
 }
