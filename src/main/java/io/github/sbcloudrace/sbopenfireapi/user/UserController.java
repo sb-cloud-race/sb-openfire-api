@@ -1,5 +1,6 @@
 package io.github.sbcloudrace.sbopenfireapi.user;
 
+import io.github.sbcloudrace.sbopenfireapi.persona.PersonaServiceProxy;
 import lombok.AllArgsConstructor;
 import org.igniterealtime.restclient.entity.UserEntity;
 import org.springframework.stereotype.Controller;
@@ -18,11 +19,12 @@ public class UserController {
 
     private final UserServiceProxy userServiceProxy;
 
+    private final PersonaServiceProxy personaServiceProxy;
+
     @RequestMapping(value = "/{userId}/{securityToken}", method = RequestMethod.PUT)
     @ResponseBody
     public void createAllPersonasXmpp(@PathVariable Long userId, @PathVariable String securityToken) {
-        List<Long> personaIds = new ArrayList<>();
-        personaIds.add(100L);
+        List<Long> personaIds = personaServiceProxy.personasIdsByUser(userId);
         personaIds.forEach(aLong -> {
             String xmppUserName = "sbrw.".concat(aLong.toString());
             try {
